@@ -9,15 +9,24 @@
 import UIKit
 
 class ViewController: UIViewController {
+    @IBOutlet var mainView: UIView!
     @IBOutlet weak var tableView: UITableView!
     @IBOutlet weak var timeLabel: UILabel!
     @IBOutlet var stopwatchButtons: [RoundedButton]!
+    @IBOutlet weak var modeSwitch: UISwitch!
+    @IBOutlet weak var startButton: RoundedButton!
+    @IBOutlet weak var stopButton: RoundedButton!
+    @IBOutlet weak var modeLabel: UILabel!
     
     var seconds = 0
-    var running = false
     var timer = Timer()
+    var running = false
     
     var roundTimes = [String]()
+    
+    var darkmode = true
+    var darkBackgroundColor: UIColor?
+    var darkButtonColor: UIColor?
     
     let formatter = DateComponentsFormatter()
     
@@ -27,6 +36,8 @@ class ViewController: UIViewController {
         formatter.zeroFormattingBehavior = .pad
         updateTimeLabel()
         tableView.dataSource = self
+        darkBackgroundColor = self.mainView.backgroundColor!
+        darkButtonColor = self.startButton.backgroundColor!
         
         stopwatchButtons = stopwatchButtons.sorted { $0.tag < $1.tag }
     }
@@ -90,6 +101,32 @@ class ViewController: UIViewController {
                 break
             }
         }
+    }
+    
+    @IBAction func switchHandler(_ sender: UISwitch) {
+        if darkmode {
+            self.mainView.backgroundColor = .white
+            self.startButton.backgroundColor = .lightGray
+            self.stopButton.backgroundColor = .lightGray
+            self.timeLabel.textColor = .black
+            self.modeLabel.textColor = .black
+            self.tableView.backgroundColor = .white
+            darkmode = false
+        }
+        else if !darkmode {
+            if let backgroundColor = darkBackgroundColor {
+                if let buttonColor = darkButtonColor {
+                    self.mainView.backgroundColor = backgroundColor
+                    self.startButton.backgroundColor = buttonColor
+                    self.stopButton.backgroundColor = buttonColor
+                    self.timeLabel.textColor = .white
+                    self.modeLabel.textColor = .white
+                    self.tableView.backgroundColor = backgroundColor
+                    darkmode = true
+                }
+            }
+        }
+        
     }
 }
 
